@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp">
+
+        <EditText
+            android:id="@+id/book_image_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Ảnh"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_id_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Mã sách"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_name_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Tên sách"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_quantity_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Số lượng"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_author_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Tác giả"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_category_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Thể loại"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/book_description_add"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:hint="Mô tả"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp">
+            <Button
+                android:id="@+id/btnHuy"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/black"
+                android:text="Hủy" />
+
+            <Button
+                android:id="@+id/btnThem"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:text="Thêm"
+                android:backgroundTint="@color/purple_700"
+                android:layout_marginLeft="110dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btnHien"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="540dp"-->
+    <!--        android:text="Hiện"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/txtHien"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_marginTop="612dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

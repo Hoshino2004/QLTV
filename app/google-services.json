@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "637270827612",
+    "project_id": "qltv-cd5c3",
+    "storage_bucket": "qltv-cd5c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637270827612:android:9f0e6a047d7afbf73ffc99",
+        "android_client_info": {
+          "package_name": "com.example.qltv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzgONB2nhn79dJogRaTPzLEWk5LlcBuSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
