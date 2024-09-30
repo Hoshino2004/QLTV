@@ -3,6 +3,8 @@ package com.example.qltv;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,12 +38,31 @@ public class BookListActivity extends AppCompatActivity {
     RecyclerView rcvBook;
     BookAdapter mBookAdapter;
     List<Book> mListBook;
+
+    EditText edtSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
         addControl();
         getListBook();
+        // Thêm TextWatcher để thực hiện tìm kiếm
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần xử lý
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mBookAdapter.filter(s.toString()); // Lọc danh sách theo text người dùng nhập
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần xử lý
+            }
+        });
     }
 
     @Override
@@ -62,6 +83,8 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     private void addControl() {
+        edtSearch = findViewById(R.id.edtSearch);
+
         rcvBook = findViewById(R.id.rcvBook);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(BookListActivity.this);
         rcvBook.setLayoutManager(linearLayoutManager);
@@ -97,6 +120,8 @@ public class BookListActivity extends AppCompatActivity {
                     Book book = dataSnapshot.getValue(Book.class);
                     mListBook.add(book);
                 }
+                // Cập nhật mListBookFull để lưu trữ toàn bộ danh sách
+                mBookAdapter.updateFullList(new ArrayList<>(mListBook));
                 mBookAdapter.notifyDataSetChanged();
             }
 

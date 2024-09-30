@@ -13,18 +13,23 @@ import com.bumptech.glide.Glide;
 import com.example.qltv.R;
 import com.example.qltv.model.Book;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder>{
     private List<Book> mListBook;
+    private List<Book> mListBookFull;
 
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
     }
     private OnItemLongClickListener onItemLongClickListener;
 
-    public BookAdapter(List<Book> mListSP, OnItemLongClickListener onItemLongClickListener) {
-        this.mListBook = mListSP;
+    public BookAdapter(List<Book> mListBook, OnItemLongClickListener onItemLongClickListener) {
+        this.mListBook = mListBook;
+        mListBookFull = new ArrayList<>(mListBook);
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
@@ -81,4 +86,55 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             });
         }
     }
+
+    // Filter method for searching
+    public void filter(String text) {
+        mListBook.clear();
+        if (text.isEmpty()) {
+            mListBook.addAll(mListBookFull);
+        } else {
+            String filterPattern = normalizeString(text.trim());
+
+            for (Book book : mListBookFull) {
+                String bookName = normalizeString(book.getName());
+
+                // Tìm kiếm theo thứ tự từ đầu đến cuối
+                if (bookName.startsWith(filterPattern)) {
+                    mListBook.add(book);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+
+
+    public void updateFullList(List<Book> fullList) {
+        this.mListBookFull = fullList;
+    }
+
+    public String removeDiacritics(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
+    }
+
+    public String normalizeString(String input) {
+        input = input.toLowerCase();
+        // Loại bỏ dấu tiếng Việt
+        String normalized = removeDiacritics(input);
+
+        // Thay thế các ký tự đặc biệt
+        normalized = normalized.replaceAll("đ", "d");
+        normalized = normalized.replaceAll("[âáàạảã]", "a");
+        normalized = normalized.replaceAll("[êéèẹẻẽ]", "e");
+        normalized = normalized.replaceAll("[ôơóòọỏõ]", "o");
+        normalized = normalized.replaceAll("[ưúùụủũ]", "u");
+        normalized = normalized.replaceAll("[íìịỉĩ]", "i");
+        normalized = normalized.replaceAll("[ýỳỵỷỹ]", "y");
+
+        return normalized;
+    }
+
+
 }
