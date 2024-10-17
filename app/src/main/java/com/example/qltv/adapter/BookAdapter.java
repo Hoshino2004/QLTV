@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.qltv.R;
 import com.example.qltv.model.Book;
 
@@ -46,7 +47,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Book book = mListBook.get(position);
         if (book == null)
             return;
-        Glide.with(holder.itemView.getContext()).load(book.getImage()).error(R.drawable.firefly).into(holder.bookImage);
+        Glide.with(holder.itemView.getContext()).load(book.getImage())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)  // Không lưu cache trên đĩa
+                .skipMemoryCache(true)                      // Không lưu cache trong bộ nhớ
+                .error(R.drawable.firefly)
+                .into(holder.bookImage);
         holder.bookName.setText(book.getName());
         holder.bookQuantity.setText(String.valueOf(book.getQuantity()));
         holder.bookAuthor.setText(book.getAuthor());

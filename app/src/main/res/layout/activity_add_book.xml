@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -15,19 +15,24 @@
         android:layout_marginTop="50dp"
         android:layout_marginLeft="30dp">
 
-        <EditText
-            android:id="@+id/book_image_add"
+        <ImageView
+            android:id="@+id/book_image_view"
             android:layout_width="350dp"
-            android:layout_height="70dp"
-            android:hint="Ảnh"
-            android:textSize="20sp" />
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="Image Preview"
+            android:scaleType="centerCrop"/>
 
         <EditText
             android:id="@+id/book_id_add"
             android:layout_width="350dp"
             android:layout_height="70dp"
             android:hint="Mã sách"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:focusable="false"
+            android:clickable="false"
+            android:inputType="none" />
+
 
         <EditText
             android:id="@+id/book_name_add"
@@ -50,12 +55,11 @@
             android:hint="Tác giả"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/book_category_add"
+        <Spinner
+            android:id="@+id/book_category_spinner"
             android:layout_width="350dp"
-            android:layout_height="70dp"
-            android:hint="Thể loại"
-            android:textSize="20sp" />
+            android:layout_height="70dp" />
+
 
         <EditText
             android:id="@+id/book_description_add"
@@ -74,7 +78,7 @@
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:backgroundTint="@color/black"
-                android:text="Hủy" />
+                android:text="Trở về" />
 
             <Button
                 android:id="@+id/btnThem"
@@ -109,4 +113,4 @@
     <!--        app:layout_constraintStart_toStartOf="parent"-->
     <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

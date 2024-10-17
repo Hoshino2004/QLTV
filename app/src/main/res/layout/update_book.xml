@@ -24,6 +24,15 @@
                 android:gravity="center"
                 android:textStyle="bold"
                 />
+
+            <ImageView
+                android:id="@+id/book_image_update"
+                android:layout_width="350dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="Image Preview"
+                android:scaleType="centerCrop"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -42,36 +51,21 @@
                 android:paddingTop="30dp"
                 android:textStyle="bold"
                 />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:hint="Ảnh"
-                android:id="@+id/book_image_update"
-                android:textSize="30sp"
-                android:paddingTop="30dp"
-                android:textStyle="bold"
-                />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:hint="Tác giả"
                 android:id="@+id/book_author_update"
                 android:textSize="30sp"
-                android:inputType="number"
                 android:paddingTop="30dp"
                 android:textStyle="bold"
                 />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:hint="Thể loại"
-                android:id="@+id/book_category_update"
-                android:textSize="30sp"
-                android:inputType="number"
-                android:paddingTop="30dp"
-                android:textStyle="bold"
-                />
+            <Spinner
+                android:id="@+id/book_category_spinner_update"
+                android:layout_width="350dp"
+                android:layout_height="70dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -90,7 +84,6 @@
                 android:hint="Mô tả"
                 android:id="@+id/book_description_update"
                 android:textSize="30sp"
-                android:inputType="number"
                 android:paddingTop="30dp"
                 android:textStyle="bold"
                 />
