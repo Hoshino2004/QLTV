@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:angle="-90"
+                android:endColor="#354AB1"
+                android:startColor="#CFCDCD" />         <!-- Góc của gradient (0, 45, 90, 180, etc.) -->
+            <corners android:radius="8dp" />  <!-- Góc bo tròn -->
+        </shape>
+    </item>
+</layer-list>
