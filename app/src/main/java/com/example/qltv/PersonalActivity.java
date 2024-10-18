@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +23,7 @@ public class PersonalActivity extends AppCompatActivity {
 
     Button btnSignOut;
     TextView userEmail;
+    LinearLayout btnChangePass;
 
     // Lấy đối tượng FirebaseAuth
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -49,6 +51,12 @@ public class PersonalActivity extends AppCompatActivity {
                 finish();
             }
         });
+        btnChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonalActivity.this, ChangePasswordActivity.class));
+            }
+        });
     }
 
     @Override
@@ -70,6 +78,7 @@ public class PersonalActivity extends AppCompatActivity {
 
     private void addControls() {
         btnSignOut = findViewById(R.id.btnSignOut);
+        btnChangePass = findViewById(R.id.btnChangePassword);
         userEmail = findViewById(R.id.userEmail);
     }
 }
