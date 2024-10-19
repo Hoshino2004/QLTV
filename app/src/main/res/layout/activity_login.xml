@@ -23,40 +23,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Ô nhập email -->
-    <EditText
-        android:id="@+id/edtEmail2"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Email"
         android:layout_marginTop="30dp"
-        android:inputType="textEmailAddress"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/ic_email"
-        android:padding="16dp"
-        android:background="@drawable/bg_edittext"
         app:layout_constraintTop_toBottomOf="@+id/tvLoginTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp">
+
+        <!-- Ô nhập email -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtEmail2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_email"
+            android:padding="16dp"
+            android:background="@drawable/bg_edittext" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Ô nhập mật khẩu -->
-    <EditText
-        android:id="@+id/edtPass2"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Mật khẩu"
-        app:passwordToggleEnabled="true"
-        android:inputType="textPassword"
         android:layout_marginTop="10dp"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/ic_password2"
-        android:padding="16dp"
-        android:background="@drawable/bg_edittext"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail2"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPass2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_password2"
+            android:padding="16dp"
+            android:background="@drawable/bg_edittext" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- Nút đăng nhập -->
     <Button
@@ -68,7 +83,7 @@
         android:backgroundTint="@color/black"
         android:textColor="@android:color/white"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/edtPass2"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp" />
@@ -87,4 +102,5 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

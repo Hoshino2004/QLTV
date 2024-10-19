@@ -1,11 +1,13 @@
 package com.example.qltv;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,23 +26,25 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private EditText etOldPassword, etNewPassword;
     private Button btnChangePassword;
     private FirebaseAuth auth;
+    TextView btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
-        // Hiển thị nút back trên ActionBar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        getSupportActionBar().setTitle("");
-
         etOldPassword = findViewById(R.id.etOldPassword);
         etNewPassword = findViewById(R.id.etNewPassword);
         btnChangePassword = findViewById(R.id.btnChangePassword2);
+        btnBack = findViewById(R.id.btn_back_personal);
         auth = FirebaseAuth.getInstance();
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChangePasswordActivity.this, PersonalActivity.class));
+            }
+        });
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,16 +84,5 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:  // Đây là ID của nút back
-                onBackPressed();     // Quay lại Activity trước đó
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }
