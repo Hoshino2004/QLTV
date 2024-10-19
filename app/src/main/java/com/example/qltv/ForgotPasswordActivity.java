@@ -1,10 +1,12 @@
 package com.example.qltv;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText edtEmailResetPass;
     private Button btnSendEmail;
     private ProgressDialog progressDialog;
+    TextView txtBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onClickForgotPassword();
+            }
+        });
+        txtBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
             }
         });
     }
@@ -55,5 +64,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         edtEmailResetPass = findViewById(R.id.edt_email_reset_password);
         btnSendEmail = findViewById(R.id.btn_send_email);
         progressDialog = new ProgressDialog(this);
+        txtBack = findViewById(R.id.btn_back_login);
     }
 }
