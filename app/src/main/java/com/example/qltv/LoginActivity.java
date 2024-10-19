@@ -3,6 +3,7 @@ package com.example.qltv;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.qltv.R;
 
 
@@ -48,50 +50,43 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = edtEmail2.getText().toString().trim();
                 String password = edtPass2.getText().toString().trim();
-                boolean a = true;
-                boolean b = false;
-                if (email.isEmpty()) {
-                    edtEmail2.setError("Không được để trống email!");
-                    a = false;
-                }
-                if (password.isEmpty()) {
-                    edtPass2.setError("Không được để trống mật khẩu!");
-                    a = false;
-                }
-                if (a){
-                    if (password.length()<6)
-                        edtPass2.setError("Mật khẩu phải từ 6 kí tự trở lên!");
-                    else
-                        b = true;
-                }
-                if (b){
-                    final FirebaseAuth auth = FirebaseAuth.getInstance();
-                    progressDialog.show();
-                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener((task) -> {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            if (auth.getCurrentUser().isEmailVerified()){
-                                invalidateOptionsMenu();
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }else {
-                                Toast.makeText(LoginActivity.this, "Vui lòng xác thực Email", Toast.LENGTH_SHORT).show();
-                                auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
 
-                                        } else {
-                                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            }
-                        }else{
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (TextUtils.isEmpty(email)) {
+                    edtEmail2.setError("Nhập email của bạn");
+                    return;
                 }
+
+                if (TextUtils.isEmpty(password)) {
+                    edtPass2.setError("Nhập mật khẩu của bạn");
+                    return;
+                }
+
+                final FirebaseAuth auth = FirebaseAuth.getInstance();
+                progressDialog.show();
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener((task) -> {
+                    progressDialog.dismiss();
+                    if (task.isSuccessful()) {
+                        if (auth.getCurrentUser().isEmailVerified()) {
+                            invalidateOptionsMenu();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Vui lòng xác thực Email", Toast.LENGTH_SHORT).show();
+                            auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         layoutForgotPassword.setOnClickListener(new View.OnClickListener() {
