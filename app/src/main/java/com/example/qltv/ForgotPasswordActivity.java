@@ -36,7 +36,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         txtBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+                onBackPressed();
             }
         });
     }

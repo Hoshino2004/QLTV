@@ -141,12 +141,26 @@ public class BookListActivity extends AppCompatActivity {
         rcvBook.addItemDecoration(dividerItemDecoration);
 
         mListBook = new ArrayList<>();
+
         mBookAdapter = new BookAdapter(mListBook, new BookAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(int position) {
                 Book book = mListBook.get(position);
                 generatedBookId = book.getId();
                 showUpdateDialog(book.getId(), book.getName(), book.getImage(), book.getQuantity(), book.getAuthor(), book.getCategory(), book.getDescription());
+            }
+        }, new BookAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Book book = mListBook.get(position);
+                Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
+                intent.putExtra("bookImage", book.getImage());
+                intent.putExtra("bookName", book.getName());
+                intent.putExtra("bookAuthor", book.getAuthor());
+                intent.putExtra("bookQuantity", book.getQuantity());
+                intent.putExtra("bookCategory", book.getCategory());
+                intent.putExtra("bookDescription", book.getDescription());
+                startActivity(intent);
             }
         });
         rcvBook.setAdapter(mBookAdapter);

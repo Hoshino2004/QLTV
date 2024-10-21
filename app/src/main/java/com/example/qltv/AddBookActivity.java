@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,7 +38,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class AddBookActivity extends AppCompatActivity {
-    Button btnThem, btnHuy;
+    Button btnThem;
     EditText bookIdAdd, bookNameAdd, bookQuantityAdd, bookDescriptionAdd, bookAuthorAdd;
     Spinner bookCategorySpinner;
 
@@ -60,6 +61,13 @@ public class AddBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
+
+        // Hiển thị nút back trên ActionBar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+        getSupportActionBar().setTitle("");
 
         addControls();
 
@@ -89,13 +97,18 @@ public class AddBookActivity extends AppCompatActivity {
                 uploadImage();
             }
         });
-        btnHuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AddBookActivity.this, BookListActivity.class));
-            }
-        });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:  // Đây là ID của nút back
+                onBackPressed();     // Quay lại Activity trước đó
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // Hàm load thể loại sách từ Firebase và đưa vào Spinner
@@ -239,6 +252,5 @@ public class AddBookActivity extends AppCompatActivity {
         bookAuthorAdd = findViewById(R.id.book_author_add);
         bookCategorySpinner = findViewById(R.id.book_category_spinner);
         btnThem = findViewById(R.id.btnThem);
-        btnHuy = findViewById(R.id.btnHuy);
     }
 }

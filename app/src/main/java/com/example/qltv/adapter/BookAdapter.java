@@ -19,19 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder>{
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     private List<Book> mListBook;
     private List<Book> mListBookFull;
 
+    // Interface for long click
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
     }
-    private OnItemLongClickListener onItemLongClickListener;
 
-    public BookAdapter(List<Book> mListBook, OnItemLongClickListener onItemLongClickListener) {
+    // Interface for click
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    private OnItemLongClickListener onItemLongClickListener;
+    private OnItemClickListener onItemClickListener;
+
+    public BookAdapter(List<Book> mListBook, OnItemLongClickListener onItemLongClickListener, OnItemClickListener onItemClickListener) {
         this.mListBook = mListBook;
         mListBookFull = new ArrayList<>(mListBook);
         this.onItemLongClickListener = onItemLongClickListener;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -47,15 +56,16 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Book book = mListBook.get(position);
         if (book == null)
             return;
+
         Glide.with(holder.itemView.getContext()).load(book.getImage())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)  // Không lưu cache trên đĩa
                 .skipMemoryCache(true)                      // Không lưu cache trong bộ nhớ
                 .error(R.drawable.firefly)
                 .into(holder.bookImage);
+
         holder.bookName.setText(book.getName());
         holder.bookQuantity.setText(String.valueOf(book.getQuantity()));
         holder.bookAuthor.setText(book.getAuthor());
-        holder.bookDescription.setText(book.getDescription());
         holder.bookCategory.setText(book.getCategory());
     }
 
@@ -67,16 +77,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     public class BookViewHolder extends RecyclerView.ViewHolder {
-        TextView bookName, bookQuantity, bookAuthor, bookDescription, bookCategory;
+        TextView bookName, bookQuantity, bookAuthor, bookCategory;
         ImageView bookImage;
+
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
             bookImage = itemView.findViewById(R.id.book_image);
             bookName = itemView.findViewById(R.id.book_name);
             bookQuantity = itemView.findViewById(R.id.book_quantity);
             bookAuthor = itemView.findViewById(R.id.book_author);
-            bookDescription = itemView.findViewById(R.id.book_description);
             bookCategory = itemView.findViewById(R.id.book_category);
+
+            // Handle long click
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -87,6 +99,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                         }
                     }
                     return true; // Tiêu thụ sự kiện long click
+                }
+            });
+
+            // Handle normal click
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            onItemClickListener.onItemClick(position);
+                        }
+                    }
                 }
             });
         }
@@ -111,8 +136,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         }
         notifyDataSetChanged();
     }
-
-
 
     public void updateFullList(List<Book> fullList) {
         this.mListBookFull = fullList;
@@ -140,6 +163,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
         return normalized;
     }
-
-
 }
+

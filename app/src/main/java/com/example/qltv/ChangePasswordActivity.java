@@ -42,7 +42,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ChangePasswordActivity.this, PersonalActivity.class));
+                onBackPressed();
             }
         });
 
@@ -72,8 +72,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             // Update the password
                             user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
+                                    etNewPassword.setText("");
+                                    etOldPassword.setText("");
                                     Toast.makeText(ChangePasswordActivity.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    etNewPassword.setText("");
+                                    etOldPassword.setText("");
                                     Toast.makeText(ChangePasswordActivity.this, "Cập nhật mật khẩu thất bại", Toast.LENGTH_SHORT).show();
                                 }
                             });
