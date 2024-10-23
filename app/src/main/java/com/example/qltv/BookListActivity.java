@@ -69,7 +69,6 @@ public class BookListActivity extends AppCompatActivity {
     StorageReference storageReference;
     String generatedBookId;
     String imageUrl;
-    AlertDialog alertDialog;
 
     public interface ImageUploadCallback {
         void onImageUploaded(String imageUrl);
@@ -376,14 +375,14 @@ public class BookListActivity extends AppCompatActivity {
         mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                showToast("Deleted");
+                showToast("Xóa sách thành công");
                 mBookAdapter.notifyDataSetChanged();
                 startActivity(new Intent(BookListActivity.this, BookListActivity.class));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                showToast("Error deleting record");
+                showToast("Xóa sách thất bại");
                 //startActivity(new Intent(getContext(), DataManagementFragment.class));
             }
         });

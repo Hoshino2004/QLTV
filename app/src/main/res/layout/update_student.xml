@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="30dp">
+
+        <EditText
+            android:id="@+id/student_id_update"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="Mã sinh viên"
+            android:paddingTop="30dp"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/student_name_update"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="Tên sinh viên"
+            android:paddingTop="30dp"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/student_phone_update"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="Số điện thoại"
+            android:inputType="phone"
+            android:paddingTop="30dp"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="30dp">
+
+            <Button
+                android:id="@+id/btnDeleteStudent"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:text="Xóa"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btnUpdateStudent"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:text="Sửa"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+</LinearLayout>

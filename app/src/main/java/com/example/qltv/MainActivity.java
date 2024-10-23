@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    CardView cardProfile, cardBook;
+    CardView cardProfile, cardBook, cardStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         cardProfile = findViewById(R.id.cardProfile);
         cardBook = findViewById(R.id.cardBook);
+        cardStudent = findViewById(R.id.cardStudent);
 
         cardProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, BookListActivity.class));
+            }
+        });
+
+        cardStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, StudentListActivity.class));
             }
         });
     }

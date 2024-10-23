@@ -85,7 +85,7 @@
 
     <!-- Item Trang Cá Nhân -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardProfile2"
+        android:id="@+id/cardStudent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="6dp"
