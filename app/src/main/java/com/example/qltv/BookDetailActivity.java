@@ -45,7 +45,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void addEvents() {
         Intent intent = getIntent();
-        Glide.with(this).load(intent.getStringExtra("bookImage")).error(R.drawable.firefly).into(bookImage);
+        Glide.with(this).load(intent.getStringExtra("bookImage")).error(R.drawable.ic_error34).into(bookImage);
         bookName.setText(intent.getStringExtra("bookName"));
         bookQuantity.setText(String.valueOf(intent.getIntExtra("bookQuantity", 0)));
         bookCategory.setText(intent.getStringExtra("bookCategory"));

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -195,6 +196,15 @@ public class StudentListActivity extends AppCompatActivity {
                 String newName = studentNameUpdate.getText().toString();
                 String newPhone = studentPhoneUpdate.getText().toString();
 
+                if (TextUtils.isEmpty(newName)) {
+                    studentNameUpdate.setError("Vui lòng nhập tên sinh viên");
+                    return;
+                }
+                if (TextUtils.isEmpty(newPhone)) {
+                    studentPhoneUpdate.setError("Vui lòng nhập số điện thoại");
+                    return;
+                }
+
                 updateData(id, newName, newPhone);
                 studentNameUpdate.setText("");
                 studentPhoneUpdate.setText("");
@@ -209,7 +219,7 @@ public class StudentListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(StudentListActivity.this);
-                builder.setTitle("Delete");
+                builder.setTitle("Xóa sinh viên");
                 builder.setMessage("Bạn có chắc muốn xóa sinh viên này không?");
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override

@@ -35,7 +35,7 @@
                         android:hint="Tên sách"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="30dp" />
+                        android:textSize="27dp" />
 
                 </LinearLayout>
 

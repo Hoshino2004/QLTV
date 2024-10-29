@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -204,7 +205,6 @@ public class AddBookActivity extends AppCompatActivity {
                                     addBookToDatabase(imageUrl);  // Gọi hàm lưu thông tin sách và link ảnh
                                 }
                             });
-                            Toast.makeText(AddBookActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -220,11 +220,37 @@ public class AddBookActivity extends AppCompatActivity {
     private void addBookToDatabase(String imageUrl) {
         String id = bookIdAdd.getText().toString().trim();
         String name = bookNameAdd.getText().toString().trim();
-        int quantity = Integer.parseInt(bookQuantityAdd.getText().toString().trim());
+        String quantityText = bookQuantityAdd.getText().toString().trim();
         String description = bookDescriptionAdd.getText().toString().trim();
         String author = bookAuthorAdd.getText().toString().trim();
         String category = bookCategorySpinner.getSelectedItem().toString(); // Lấy giá trị thể loại từ Spinner
 
+        if (TextUtils.isEmpty(name)) {
+            bookNameAdd.setError("Vui lòng nhập tên sách");
+            storageReference.child("images/" + id).delete();
+            return;
+        }
+
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityText);
+        } catch (NumberFormatException e) {
+            bookQuantityAdd.setError("Số lượng không hợp lệ");
+            storageReference.child("images/" + id).delete();
+            return;
+        }
+
+        if (TextUtils.isEmpty(description)) {
+            bookDescriptionAdd.setError("Vui lòng nhập mô tả");
+            storageReference.child("images/" + id).delete();
+            return;
+        }
+
+        if (TextUtils.isEmpty(author)) {
+            bookAuthorAdd.setError("Vui lòng nhập tác giả");
+            storageReference.child("images/" + id).delete();
+            return;
+        }
 
         Book book = new Book(id, name, imageUrl, quantity, author, category, description);
         addBook(book);
@@ -238,7 +264,7 @@ public class AddBookActivity extends AppCompatActivity {
         booksRef.child(pathObject).setValue(book, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-
+                Toast.makeText(AddBookActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
             }
         });
     }

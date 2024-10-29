@@ -60,7 +60,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Glide.with(holder.itemView.getContext()).load(book.getImage())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)  // Không lưu cache trên đĩa
                 .skipMemoryCache(true)                      // Không lưu cache trong bộ nhớ
-                .error(R.drawable.firefly)
+                .error(R.drawable.ic_error34)
                 .into(holder.bookImage);
 
         holder.bookName.setText(book.getName());
@@ -128,8 +128,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             for (Book book : mListBookFull) {
                 String bookName = normalizeString(book.getName());
 
-                // Tìm kiếm theo thứ tự từ đầu đến cuối
-                if (bookName.startsWith(filterPattern)) {
+                // Tìm kiếm từ khóa xuất hiện bất kỳ đâu trong tên sách
+                if (bookName.contains(filterPattern)) {
                     mListBook.add(book);
                 }
             }

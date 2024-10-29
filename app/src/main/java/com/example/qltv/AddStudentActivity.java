@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -84,6 +85,21 @@ public class AddStudentActivity extends AppCompatActivity {
         String id = studentIdAdd.getText().toString().trim();
         String name = studentNameAdd.getText().toString().trim();
         String phone = studentPhoneAdd.getText().toString().trim();
+
+        if (TextUtils.isEmpty(id)) {
+            studentIdAdd.setError("Vui lòng nhập mã sinh viên");
+            return;
+        }
+
+        if (TextUtils.isEmpty(name)) {
+            studentNameAdd.setError("Vui lòng nhập tên sinh viên");
+            return;
+        }
+
+        if (TextUtils.isEmpty(phone)) {
+            studentPhoneAdd.setError("Vui lòng nhập số điện thoại");
+            return;
+        }
 
         Student student = new Student(id, name, phone);
 

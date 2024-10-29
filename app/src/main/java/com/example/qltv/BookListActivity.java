@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -296,7 +297,6 @@ public class BookListActivity extends AppCompatActivity {
         Button btnUpdate = mDialogView.findViewById(R.id.btnUpdate);
         Button btnDelete = mDialogView.findViewById(R.id.btnDelete);
 
-
         bookIdUpdate.setText(String.valueOf(id));
         bookIdUpdate.setEnabled(false);
         bookNameUpdate.setText(name);
@@ -313,10 +313,11 @@ public class BookListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String newName = bookNameUpdate.getText().toString();
-                int newQuantity = Integer.parseInt(bookQuantityUpdate.getText().toString());
+                String newQuantityText = bookQuantityUpdate.getText().toString();
                 String newAuthor = bookAuthorUpdate.getText().toString();
                 String newCategory = bookCategoryUpdate.getSelectedItem().toString();
                 String newDescription = bookDescriptionUpdate.getText().toString();
+
                 final String[] imageUrl2 = new String[1];
                 imageUrl2[0] = image;
 
@@ -326,6 +327,30 @@ public class BookListActivity extends AppCompatActivity {
                         imageUrl2[0] = imageUrl;
                     }
                 });
+
+                if (TextUtils.isEmpty(newName)) {
+                    bookNameUpdate.setError("Vui lòng nhập tên sách");
+                    return;
+                }
+
+                int newQuantity;
+                try {
+                    newQuantity = Integer.parseInt(newQuantityText);
+                } catch (NumberFormatException e) {
+                    bookQuantityUpdate.setError("Số lượng không hợp lệ");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(newAuthor)) {
+                    bookAuthorUpdate.setError("Vui lòng nhập tên tác giả");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(newDescription)) {
+                    bookDescriptionUpdate.setError("Vui lòng nhập mô tả");
+                    return;
+                }
+
                 updateData(id, newName, imageUrl2[0], newQuantity, newAuthor, newCategory, newDescription);
                 bookNameUpdate.setText("");
                 bookImageView.setImageResource(0);
@@ -344,7 +369,7 @@ public class BookListActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                deleteRecord(id);
                 AlertDialog.Builder builder = new AlertDialog.Builder(BookListActivity.this);
-                builder.setTitle("Delete");
+                builder.setTitle("Xóa sách");
                 builder.setMessage("Bạn có chắc muốn xóa sách này không?");
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override

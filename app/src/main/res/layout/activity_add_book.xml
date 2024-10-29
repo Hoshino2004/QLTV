@@ -45,6 +45,7 @@
             android:id="@+id/book_quantity_add"
             android:layout_width="350dp"
             android:layout_height="70dp"
+            android:inputType="number"
             android:hint="Số lượng"
             android:textSize="20sp" />
 

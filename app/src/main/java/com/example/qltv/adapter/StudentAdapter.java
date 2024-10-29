@@ -99,9 +99,10 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             for (Student student : mListStudentFull) {
                 String studentName = normalizeString(student.getTenSV());
                 String studentId = normalizeString(student.getMaSV());
+                String studentPhone = normalizeString(student.getSdtSV());
 
                 // Tìm kiếm theo cả tên và mã sinh viên
-                if (studentName.contains(filterPattern) || studentId.contains(filterPattern)) {
+                if (studentName.contains(filterPattern) || studentId.contains(filterPattern) || studentPhone.contains(filterPattern)) {
                     mListStudent.add(student);
                 }
             }
