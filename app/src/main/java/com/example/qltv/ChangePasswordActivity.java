@@ -21,12 +21,23 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     private EditText etOldPassword, etNewPassword;
     private Button btnChangePassword;
     private FirebaseAuth auth;
     TextView btnBack;
+
+    FirebaseDatabase database;
+    DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +49,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         btnChangePassword = findViewById(R.id.btnChangePassword2);
         btnBack = findViewById(R.id.btn_back_personal);
         auth = FirebaseAuth.getInstance();
+
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("User");
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +88,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 if (task1.isSuccessful()) {
                                     etNewPassword.setText("");
                                     etOldPassword.setText("");
+                                    Map<String, Object> updateData = new HashMap<>();
+                                    updateData.put("password", newPassword);
+                                    userRef.child(user.getUid()).updateChildren(updateData);
                                     Toast.makeText(ChangePasswordActivity.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                 } else {
                                     etNewPassword.setText("");

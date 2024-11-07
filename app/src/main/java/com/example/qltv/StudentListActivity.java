@@ -73,6 +73,7 @@ public class StudentListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_list);
+        getSupportActionBar().setTitle("Quản lý sinh viên");
         addControl();
         getListStudent();
         // Thêm TextWatcher để thực hiện tìm kiếm

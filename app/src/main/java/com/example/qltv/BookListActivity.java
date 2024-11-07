@@ -79,6 +79,7 @@ public class BookListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
+        getSupportActionBar().setTitle("Quản lý sách");
         addControl();
         getListBook();
         // Thêm TextWatcher để thực hiện tìm kiếm
