@@ -1,5 +1,6 @@
 package com.example.qltv.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.qltv.R;
 import com.example.qltv.model.Book;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ import java.util.regex.Pattern;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     private List<Book> mListBook;
     private List<Book> mListBookFull;
+    DatabaseReference bookRef;
+    FirebaseDatabase database;
 
     // Interface for long click
     public interface OnItemLongClickListener {
@@ -67,6 +72,25 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.bookQuantity.setText(String.valueOf(book.getQuantity()));
         holder.bookAuthor.setText(book.getAuthor());
         holder.bookCategory.setText(book.getCategory());
+
+        database = FirebaseDatabase.getInstance();
+        bookRef = database.getReference("Book");
+
+        if (book.getQuantity() > 0) {
+            bookRef.child(book.getId()).child("status").setValue("Còn sách");
+            holder.bookStatus.setText(book.getStatus());
+        }
+        else {
+            bookRef.child(book.getId()).child("status").setValue("Hết sách");
+            holder.bookStatus.setText(book.getStatus());
+        }
+
+        if (book.getStatus().equals("Còn sách")) {
+            holder.bookStatus.setTextColor(Color.GREEN);
+        }
+        else {
+            holder.bookStatus.setTextColor(Color.RED);
+        }
     }
 
     @Override
@@ -77,7 +101,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     public class BookViewHolder extends RecyclerView.ViewHolder {
-        TextView bookName, bookQuantity, bookAuthor, bookCategory;
+        TextView bookName, bookQuantity, bookAuthor, bookCategory, bookStatus;
         ImageView bookImage;
 
         public BookViewHolder(@NonNull View itemView) {
@@ -87,6 +111,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             bookQuantity = itemView.findViewById(R.id.book_quantity);
             bookAuthor = itemView.findViewById(R.id.book_author);
             bookCategory = itemView.findViewById(R.id.book_category);
+            bookStatus = itemView.findViewById(R.id.book_status);
 
             // Handle long click
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -118,24 +143,33 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     // Filter method for searching
-    public void filter(String text) {
+    public void filterBooks(String text, String selectedCategory) {
         mListBook.clear();
-        if (text.isEmpty()) {
-            mListBook.addAll(mListBookFull);
+
+        if (text.isEmpty() && (selectedCategory == null || selectedCategory.equals("--Tất cả thể loại--"))) {
+            mListBook.addAll(mListBookFull);  // Nếu không có bộ lọc, hiển thị tất cả sách
         } else {
             String filterPattern = normalizeString(text.trim());
 
             for (Book book : mListBookFull) {
                 String bookName = normalizeString(book.getName());
 
-                // Tìm kiếm từ khóa xuất hiện bất kỳ đâu trong tên sách
-                if (bookName.contains(filterPattern)) {
+                // Kiểm tra tên sách có chứa từ khóa tìm kiếm
+                boolean matchesName = bookName.contains(filterPattern);
+
+                // Kiểm tra thể loại sách nếu có
+                boolean matchesCategory = selectedCategory == null || selectedCategory.equals("--Tất cả thể loại--") || book.getCategory().equals(selectedCategory);
+
+                // Nếu sách khớp với cả hai điều kiện
+                if (matchesName && matchesCategory) {
                     mListBook.add(book);
                 }
             }
         }
-        notifyDataSetChanged();
+        notifyDataSetChanged();  // Cập nhật UI
     }
+
+
 
     public void updateFullList(List<Book> fullList) {
         this.mListBookFull = fullList;

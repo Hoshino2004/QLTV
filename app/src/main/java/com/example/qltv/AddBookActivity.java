@@ -210,7 +210,7 @@ public class AddBookActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddBookActivity.this, "Upload thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddBookActivity.this, "Upload ảnh thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -234,6 +234,11 @@ public class AddBookActivity extends AppCompatActivity {
         int quantity;
         try {
             quantity = Integer.parseInt(quantityText);
+            if (quantity <= 0) {
+                bookQuantityAdd.setError("Số lượng phải lớn hơn 0");
+                storageReference.child("images/" + id).delete();
+                return;
+            }
         } catch (NumberFormatException e) {
             bookQuantityAdd.setError("Số lượng không hợp lệ");
             storageReference.child("images/" + id).delete();
@@ -252,7 +257,7 @@ public class AddBookActivity extends AppCompatActivity {
             return;
         }
 
-        Book book = new Book(id, name, imageUrl, quantity, author, category, description);
+        Book book = new Book(id, name, imageUrl, quantity, author, category, description, "Còn sách");
         addBook(book);
         startActivity(new Intent(AddBookActivity.this, BookListActivity.class));
     }
@@ -264,7 +269,7 @@ public class AddBookActivity extends AppCompatActivity {
         booksRef.child(pathObject).setValue(book, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(AddBookActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddBookActivity.this, "Thêm sách thành công", Toast.LENGTH_SHORT).show();
             }
         });
     }

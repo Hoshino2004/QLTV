@@ -40,7 +40,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.qltv.adapter.BookAdapter;
 import com.example.qltv.adapter.StudentAdapter;
 import com.example.qltv.model.Book;
+import com.example.qltv.model.Information;
 import com.example.qltv.model.Student;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +57,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StudentListActivity extends AppCompatActivity {
 
@@ -66,6 +70,7 @@ public class StudentListActivity extends AppCompatActivity {
     EditText edtSearchStudent;
 
     DatabaseReference studentsRef;
+    DatabaseReference informationRef;
 
     FirebaseDatabase database;
 
@@ -123,6 +128,7 @@ public class StudentListActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         studentsRef = database.getReference("Student");
+        informationRef = database.getReference("Information");
 
         edtSearchStudent = findViewById(R.id.edtSearchStudent);
 
@@ -154,13 +160,16 @@ public class StudentListActivity extends AppCompatActivity {
                 if (mListStudent != null) {
                     mListStudent.clear();
                 }
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Student student = dataSnapshot.getValue(Student.class);
-                    mListStudent.add(student);
+
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Student student = dataSnapshot.getValue(Student.class);
+                        mListStudent.add(student);
+                    }
+                    // Cập nhật mListBookFull để lưu trữ toàn bộ danh sách
+                    mStudentAdapter.updateFullList(new ArrayList<>(mListStudent));
+                    mStudentAdapter.notifyDataSetChanged();
                 }
-                // Cập nhật mListBookFull để lưu trữ toàn bộ danh sách
-                mStudentAdapter.updateFullList(new ArrayList<>(mListStudent));
-                mStudentAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -207,6 +216,27 @@ public class StudentListActivity extends AppCompatActivity {
                 }
 
                 updateData(id, newName, newPhone);
+
+                informationRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DataSnapshot snapshot = task.getResult();
+                            if (snapshot.exists()) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Information information = dataSnapshot.getValue(Information.class);
+                                    String idStudent = information.getBorrower().substring(0, Math.min(information.getBorrower().length(), 10));
+                                    if (idStudent.equals(id) && !name.equals(newName)) {
+                                        Map<String, Object> updates = new HashMap<>();
+                                        updates.put("borrower", id + " - " + newName);
+                                        informationRef.child(information.getId()).updateChildren(updates);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
                 studentNameUpdate.setText("");
                 studentPhoneUpdate.setText("");
 
@@ -225,7 +255,29 @@ public class StudentListActivity extends AppCompatActivity {
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteRecord(id);
+                        informationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (!snapshot.exists()) {
+                                    deleteRecord(id); // Nếu không có dữ liệu nào tồn tại, có thể xóa ngay
+                                    return;
+                                }
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Information information = dataSnapshot.getValue(Information.class);
+                                    String idStudent = information.getBorrower().substring(0, Math.min(information.getBorrower().length(), 10));
+                                    if (information != null && idStudent.equals(id) && !information.getStatus().equals("Đã trả")) {
+                                        showToast("Không thể xóa sinh viên đang mượn sách");
+                                        return;
+                                    }
+                                }
+                                deleteRecord(id);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
                 builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {

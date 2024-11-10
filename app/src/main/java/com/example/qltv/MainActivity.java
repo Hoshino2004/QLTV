@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    CardView cardProfile, cardBook, cardStudent, cardStaff, cardInformation;
+    CardView cardProfile, cardBook, cardStudent, cardStaff, cardInformation, cardStatistical;
     FirebaseDatabase database;
     DatabaseReference userRef;
     FirebaseAuth mAuth;
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         cardStudent = findViewById(R.id.cardStudent);
         cardStaff = findViewById(R.id.cardStaff);
         cardInformation = findViewById(R.id.cardInformation);
+        cardStatistical = findViewById(R.id.cardStatistical);
 
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("User");
@@ -94,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, StaffListActivity.class));
+            }
+        });
+        cardInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, InformationActivity.class));
+            }
+        });
+        cardStatistical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ThongKeActivity.class));
             }
         });
     }

@@ -11,10 +11,12 @@ public class Book implements Serializable {
     private String category;
     private String description;
 
+    private String status;
+
     public Book() {
     }
 
-    public Book(String id, String name, String image, int quantity, String author, String category, String description) {
+    public Book(String id, String name, String image, int quantity, String author, String category, String description, String status) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -22,6 +24,7 @@ public class Book implements Serializable {
         this.author = author;
         this.category = category;
         this.description = description;
+        this.status = status;
     }
 
     public String getId() {
@@ -78,6 +81,14 @@ public class Book implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

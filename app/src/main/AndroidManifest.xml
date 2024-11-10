@@ -16,13 +16,21 @@
         android:theme="@style/Theme.QLTV"
         tools:targetApi="31">
         <activity
-            android:name=".AddStaffActivity"
+            android:name=".ThongKeActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
         <activity
+            android:name=".InformationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <activity
+            android:name=".AddStaffActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <activity
             android:name=".StaffListActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
         <activity
             android:name=".AddStudentActivity"
             android:exported="false"
@@ -41,8 +49,11 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".AddBookActivity"
@@ -58,14 +69,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

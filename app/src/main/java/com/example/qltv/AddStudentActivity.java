@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -90,6 +91,10 @@ public class AddStudentActivity extends AppCompatActivity {
             studentIdAdd.setError("Vui lòng nhập mã sinh viên");
             return;
         }
+        if(id.length() != 10) {
+            studentIdAdd.setError("Mã sinh viên phải có 10 ký tự");
+            return;
+        }
 
         if (TextUtils.isEmpty(name)) {
             studentNameAdd.setError("Vui lòng nhập tên sinh viên");
@@ -104,8 +109,8 @@ public class AddStudentActivity extends AppCompatActivity {
         Student student = new Student(id, name, phone);
 
         studentsRef.child(id).setValue(student);
-
         startActivity(new Intent(AddStudentActivity.this, StudentListActivity.class));
+        Toast.makeText(AddStudentActivity.this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
     }
 
     private void addControls() {

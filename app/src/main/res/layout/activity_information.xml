@@ -10,18 +10,18 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/edtSearch"
-        android:hint="Tìm kiếm sách ở đây..."
+        android:id="@+id/edtSearchInformation"
+        android:hint="Tìm kiếm thông tin ở đây..."
         android:paddingLeft="30dp"
         android:background="@drawable/rounded_edit_text"/>
 
     <Spinner
-        android:id="@+id/spinnerCategory"
+        android:id="@+id/spinnerStatusInformation"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rcvBook" />
+        android:id="@+id/rcvInformation" />
 </LinearLayout>

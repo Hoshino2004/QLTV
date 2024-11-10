@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.qltv.adapter.BookAdapter;
 import com.example.qltv.model.Book;
+import com.example.qltv.model.Information;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -48,7 +51,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BookListActivity extends AppCompatActivity {
     RecyclerView rcvBook;
@@ -59,6 +65,7 @@ public class BookListActivity extends AppCompatActivity {
 
     DatabaseReference categoryRef;
     DatabaseReference booksRef;
+    DatabaseReference informationRef;
     List<String> categoryList = new ArrayList<>();
     Spinner bookCategoryUpdate;
 
@@ -82,6 +89,15 @@ public class BookListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Quản lý sách");
         addControl();
         getListBook();
+
+        Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
+
+        // Dữ liệu thể loại sách
+        List<String> categories = Arrays.asList("--Tất cả thể loại--","Kỹ năng sống", "Thiếu nhi", "Lịch sử", "Trinh thám", "Kinh dị", "Giáo dục");
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
+
         // Thêm TextWatcher để thực hiện tìm kiếm
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,7 +107,17 @@ public class BookListActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBookAdapter.filter(s.toString()); // Lọc danh sách theo text người dùng nhập
+                // Gọi phương thức filterBooks mỗi khi văn bản thay đổi
+                String searchText = s.toString();  // Lấy văn bản tìm kiếm
+                String selectedCategory = spinnerCategory.getSelectedItem().toString();  // Lấy thể loại được chọn từ Spinner
+
+                if (selectedCategory.equals("--Tất cả thể loại--")) {
+                    // Nếu chọn "Tất cả thể loại", lọc theo tên sách mà không lọc theo thể loại
+                    mBookAdapter.filterBooks(searchText, null);
+                } else {
+                    // Lọc theo tên sách và thể loại đã chọn
+                    mBookAdapter.filterBooks(searchText, selectedCategory);
+                }
             }
 
             @Override
@@ -99,6 +125,29 @@ public class BookListActivity extends AppCompatActivity {
                 // Không cần xử lý
             }
         });
+
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedCategory = categories.get(position);
+                String searchText = edtSearch.getText().toString();  // Lấy văn bản tìm kiếm hiện tại
+
+                if (selectedCategory.equals("--Tất cả thể loại--")) {
+                    // Nếu chọn "Tất cả thể loại", lọc theo tên sách không có thể loại
+                    mBookAdapter.filterBooks(searchText, null);
+                } else {
+                    // Lọc theo tên sách và thể loại đã chọn
+                    mBookAdapter.filterBooks(searchText, selectedCategory);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Không cần xử lý ở đây nữa vì Spinner luôn có giá trị được chọn
+            }
+        });
+
+
     }
 
     @Override
@@ -132,6 +181,8 @@ public class BookListActivity extends AppCompatActivity {
 
         categoryRef = database.getReference("Category");
 
+        informationRef = database.getReference("Information");
+
         edtSearch = findViewById(R.id.edtSearch);
 
         rcvBook = findViewById(R.id.rcvBook);
@@ -155,12 +206,14 @@ public class BookListActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 Book book = mListBook.get(position);
                 Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
+                intent.putExtra("bookId", book.getId());
                 intent.putExtra("bookImage", book.getImage());
                 intent.putExtra("bookName", book.getName());
                 intent.putExtra("bookAuthor", book.getAuthor());
                 intent.putExtra("bookQuantity", book.getQuantity());
                 intent.putExtra("bookCategory", book.getCategory());
                 intent.putExtra("bookDescription", book.getDescription());
+                intent.putExtra("bookStatus", book.getStatus());
                 startActivity(intent);
             }
         });
@@ -176,13 +229,15 @@ public class BookListActivity extends AppCompatActivity {
                 if (mListBook != null) {
                     mListBook.clear();
                 }
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Book book = dataSnapshot.getValue(Book.class);
-                    mListBook.add(book);
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Book book = dataSnapshot.getValue(Book.class);
+                        mListBook.add(book);
+                    }
+                    // Cập nhật mListBookFull để lưu trữ toàn bộ danh sách
+                    mBookAdapter.updateFullList(new ArrayList<>(mListBook));
+                    mBookAdapter.notifyDataSetChanged();
                 }
-                // Cập nhật mListBookFull để lưu trữ toàn bộ danh sách
-                mBookAdapter.updateFullList(new ArrayList<>(mListBook));
-                mBookAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -351,8 +406,32 @@ public class BookListActivity extends AppCompatActivity {
                     bookDescriptionUpdate.setError("Vui lòng nhập mô tả");
                     return;
                 }
+                if (newQuantity > 0) {
+                    updateData(id, newName, imageUrl2[0], newQuantity, newAuthor, newCategory, newDescription, "Còn sách");
+                }
+                else {
+                    updateData(id, newName, imageUrl2[0], newQuantity, newAuthor, newCategory, newDescription, "Hết sách");
+                }
 
-                updateData(id, newName, imageUrl2[0], newQuantity, newAuthor, newCategory, newDescription);
+                informationRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DataSnapshot snapshot = task.getResult();
+                            if (snapshot.exists()) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Information information = dataSnapshot.getValue(Information.class);
+                                    if (information.getIdBook().equals(id) && !name.equals(newName)) {
+                                        Map<String, Object> updates = new HashMap<>();
+                                        updates.put("nameBook", newName);
+                                        informationRef.child(information.getId()).updateChildren(updates);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
                 bookNameUpdate.setText("");
                 bookImageView.setImageResource(0);
                 bookQuantityUpdate.setText("");
@@ -375,7 +454,28 @@ public class BookListActivity extends AppCompatActivity {
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteRecord(id);
+                        informationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (!snapshot.exists()) {
+                                    deleteRecord(id); // Nếu không có dữ liệu nào tồn tại, có thể xóa ngay
+                                    return;
+                                }
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Information information = dataSnapshot.getValue(Information.class);
+                                    if (information != null && information.getIdBook().equals(id) && !information.getStatus().equals("Đã trả")) {
+                                        showToast("Không thể xóa sách đang có người mượn");
+                                        return;
+                                    }
+                                }
+                                deleteRecord(id);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
                 builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
@@ -389,9 +489,9 @@ public class BookListActivity extends AppCompatActivity {
         });
     }
 
-    private void updateData(String id, String name, String image, int quantity, String author, String category, String description) {
+    private void updateData(String id, String name, String image, int quantity, String author, String category, String description, String status) {
         DatabaseReference DbRef = FirebaseDatabase.getInstance().getReference("Book").child(id);
-        Book book = new Book(id, name, image, quantity, author, category, description);
+        Book book = new Book(id, name, image, quantity, author, category, description, status);
         DbRef.setValue(book);
     }
 
