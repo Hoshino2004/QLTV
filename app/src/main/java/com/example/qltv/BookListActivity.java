@@ -91,12 +91,18 @@ public class BookListActivity extends AppCompatActivity {
         getListBook();
 
         Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
+        Spinner spinnerStatusBook = findViewById(R.id.spinnerStatusBook);
 
         // Dữ liệu thể loại sách
         List<String> categories = Arrays.asList("--Tất cả thể loại--","Kỹ năng sống", "Thiếu nhi", "Lịch sử", "Trinh thám", "Kinh dị", "Giáo dục");
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(categoryAdapter);
+
+        List<String> statuses = Arrays.asList("--Tình trạng--", "Còn sách", "Hết sách");
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statuses);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatusBook.setAdapter(statusAdapter);
 
         // Thêm TextWatcher để thực hiện tìm kiếm
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -110,14 +116,18 @@ public class BookListActivity extends AppCompatActivity {
                 // Gọi phương thức filterBooks mỗi khi văn bản thay đổi
                 String searchText = s.toString();  // Lấy văn bản tìm kiếm
                 String selectedCategory = spinnerCategory.getSelectedItem().toString();  // Lấy thể loại được chọn từ Spinner
+                String selectedStatus = spinnerStatusBook.getSelectedItem().toString();
 
-                if (selectedCategory.equals("--Tất cả thể loại--")) {
-                    // Nếu chọn "Tất cả thể loại", lọc theo tên sách mà không lọc theo thể loại
-                    mBookAdapter.filterBooks(searchText, null);
+                if (selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, null);
+                } else if (!selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, selectedCategory, null);
+                } else if (selectedCategory.equals("--Tất cả thể loại--") && !selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, selectedStatus);
                 } else {
-                    // Lọc theo tên sách và thể loại đã chọn
-                    mBookAdapter.filterBooks(searchText, selectedCategory);
+                    mBookAdapter.filterBooks(searchText, selectedCategory, selectedStatus);
                 }
+
             }
 
             @Override
@@ -131,19 +141,46 @@ public class BookListActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedCategory = categories.get(position);
                 String searchText = edtSearch.getText().toString();  // Lấy văn bản tìm kiếm hiện tại
+                String selectedStatus = spinnerStatusBook.getSelectedItem().toString();
 
-                if (selectedCategory.equals("--Tất cả thể loại--")) {
-                    // Nếu chọn "Tất cả thể loại", lọc theo tên sách không có thể loại
-                    mBookAdapter.filterBooks(searchText, null);
+                if (selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, null);
+                } else if (!selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, selectedCategory, null);
+                } else if (selectedCategory.equals("--Tất cả thể loại--") && !selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, selectedStatus);
                 } else {
-                    // Lọc theo tên sách và thể loại đã chọn
-                    mBookAdapter.filterBooks(searchText, selectedCategory);
+                    mBookAdapter.filterBooks(searchText, selectedCategory, selectedStatus);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // Không cần xử lý ở đây nữa vì Spinner luôn có giá trị được chọn
+            }
+        });
+
+        spinnerStatusBook.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedStatus = statuses.get(position);
+                String searchText = edtSearch.getText().toString();  // Lấy văn bản tìm kiếm hiện tại
+                String selectedCategory = spinnerCategory.getSelectedItem().toString();
+
+                if (selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, null);
+                } else if (!selectedCategory.equals("--Tất cả thể loại--") && selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, selectedCategory, null);
+                } else if (selectedCategory.equals("--Tất cả thể loại--") && !selectedStatus.equals("--Tình trạng--")) {
+                    mBookAdapter.filterBooks(searchText, null, selectedStatus);
+                } else {
+                    mBookAdapter.filterBooks(searchText, selectedCategory, selectedStatus);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

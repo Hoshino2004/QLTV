@@ -143,25 +143,29 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     // Filter method for searching
-    public void filterBooks(String text, String selectedCategory) {
+    public void filterBooks(String text, String selectedCategory, String selectedStatus) {
         mListBook.clear();
 
-        if (text.isEmpty() && (selectedCategory == null || selectedCategory.equals("--Tất cả thể loại--"))) {
+        if (text.isEmpty() && (selectedCategory == null || selectedCategory.equals("--Tất cả thể loại--"))
+                && (selectedStatus == null || selectedStatus.equals("--Tình trạng--"))) {
             mListBook.addAll(mListBookFull);  // Nếu không có bộ lọc, hiển thị tất cả sách
         } else {
             String filterPattern = normalizeString(text.trim());
 
             for (Book book : mListBookFull) {
                 String bookName = normalizeString(book.getName());
+                String bookAuthor = normalizeString(book.getAuthor());
 
                 // Kiểm tra tên sách có chứa từ khóa tìm kiếm
                 boolean matchesName = bookName.contains(filterPattern);
+                boolean matchesAuthor = bookAuthor.contains(filterPattern);
 
                 // Kiểm tra thể loại sách nếu có
                 boolean matchesCategory = selectedCategory == null || selectedCategory.equals("--Tất cả thể loại--") || book.getCategory().equals(selectedCategory);
+                boolean matchesStatus = selectedStatus == null || selectedStatus.equals("--Tình trạng--") || book.getStatus().equals(selectedStatus);
 
                 // Nếu sách khớp với cả hai điều kiện
-                if (matchesName && matchesCategory) {
+                if ((matchesName || matchesAuthor) && matchesStatus && matchesCategory) {
                     mListBook.add(book);
                 }
             }
