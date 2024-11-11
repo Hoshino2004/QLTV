@@ -15,6 +15,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.qltv.R;
 import com.example.qltv.model.Book;
 import com.example.qltv.model.Information;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,9 @@ import java.util.regex.Pattern;
 public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.InformationViewHolder> {
     private List<Information> mListInformaion;
     private List<Information> mListInformationFull;
+
+    DatabaseReference informationRef;
+    FirebaseDatabase database;
 
     @NonNull
     @Override
@@ -52,13 +57,16 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         holder.borrowerInformation.setText(information.getBorrower());
         holder.borrowDateInformation.setText(information.getBorrowDate());
         holder.dueDateInformation.setText(information.getDueDate());
+
+        database = FirebaseDatabase.getInstance();
+        informationRef = database.getReference("Information");
+
         if (compareDates(getCurrentDate(), information.getDueDate())
                 && !information.getStatus().equals("Đã trả")) {
-            holder.statusInformation.setText("Đã quá hạn");
+            informationRef.child(information.getId()).child("status").setValue("Đã quá hạn");
         }
-        else {
-            holder.statusInformation.setText(information.getStatus());
-        }
+
+        holder.statusInformation.setText(information.getStatus());
 
         if (information.getStatus().equals("Đang mượn")) {
             holder.statusInformation.setTextColor(Color.YELLOW);
